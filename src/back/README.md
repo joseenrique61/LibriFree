@@ -60,6 +60,3 @@ La especificación completa de los endpoints y los modelos de datos se encuentra
 -   `GET, PUT /api/members/{id}`: Obtener y actualizar el perfil de un miembro.
 -   `GET, POST /api/loans`: Listar préstamos activos y registrar un nuevo préstamo.
 -   `PUT /api/loans/{id}/return`: Marcar un préstamo como devuelto.
-
----
-Generado por Gemini.
