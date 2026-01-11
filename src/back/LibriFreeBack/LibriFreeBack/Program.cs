@@ -106,13 +106,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-    // 6. Apply migrations and seed data on startup
-    using (var scope = app.Services.CreateScope())
-    {
-        var services = scope.ServiceProvider;
-        var context = services.GetRequiredService<LibriFreeContext>();
-        context.Database.Migrate();
-        SeedData.Initialize(services);
-    }
+// 6. Apply migrations and seed data on startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<LibriFreeContext>();
+    context.Database.Migrate();
+    SeedData.Initialize(services);
+}
 
 app.Run();
