@@ -21,4 +21,9 @@
       <Folder Include="Controllers\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Include="Data\**\*.cs" />
+      <Compile Include="Migrations\**\*.cs" />
+    </ItemGroup>
+
 </Project>
