@@ -119,4 +119,33 @@ public class MembersController : ControllerBase
 
         return Ok();
     }
+
+    [HttpGet("{id}/loans")]
+    public async Task<ActionResult<IEnumerable<LoanDto>>> GetMemberLoanHistory(int id)
+    {
+        if (!await _context.Members.AnyAsync(m => m.Id == id))
+        {
+            return NotFound(new ErrorDto { Code = 404, Message = "Member not found." });
+        }
+
+        var loans = await _context.Loans
+            .Where(l => l.MemberId == id)
+            .Include(l => l.Book)
+            .OrderByDescending(l => l.LoanDate)
+            .Select(l => new LoanDto
+            {
+                Id = l.Id,
+                BookId = l.BookId,
+                BookTitle = l.Book!.Title,
+                MemberId = l.MemberId,
+                MemberName = l.Member!.FirstName + " " + l.Member.LastName,
+                LoanDate = l.LoanDate,
+                DueDate = l.DueDate,
+                ReturnDate = l.ReturnDate,
+                Status = l.Status.ToString()
+            })
+            .ToListAsync();
+
+        return Ok(loans);
+    }
 }

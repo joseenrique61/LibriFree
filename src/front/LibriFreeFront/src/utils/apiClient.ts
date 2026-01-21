@@ -41,6 +41,21 @@ export interface BookInputDto {
     stock: number;
 }
 
+export interface MemberDto {
+    id: number;
+    firstName: string;
+    lastName: string;
+    dni: string;
+    email: string;
+}
+
+export interface MemberInputDto {
+    firstName: string;
+    lastName: string;
+    dni: string;
+    email: string;
+}
+
 export interface LoanDto {
     id: number;
     bookId: number;
@@ -50,7 +65,13 @@ export interface LoanDto {
     loanDate: string; // ISO date string
     dueDate: string; // ISO date string
     returnDate: string | null; // ISO date string or null
-    status: LoanStatus;
+    status: string; // "Active" | "Returned" | "Overdue"
+}
+
+export interface LoanInputDto {
+    bookId: number;
+    memberId: number;
+    dueDate: string; // ISO date string
 }
 
 
