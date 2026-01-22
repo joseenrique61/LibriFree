@@ -128,7 +128,8 @@ export function BookInventory({
                   <th className="px-6 py-4 text-left text-gray-700">Título</th>
                   <th className="px-6 py-4 text-left text-gray-700">Autor</th>
                   <th className="px-6 py-4 text-left text-gray-700">ISBN</th>
-                  <th className="px-6 py-4 text-left text-gray-700">Stock Disponible</th> {/* Changed column header */}
+                  <th className="px-6 py-4 text-left text-gray-700">Categoría</th>
+                  <th className="px-6 py-4 text-left text-gray-700">Stock Disponible</th>
                   <th className="px-6 py-4 text-right text-gray-700">Acciones</th>
                 </tr>
               </thead>
@@ -138,7 +139,8 @@ export function BookInventory({
                     <td className="px-6 py-4 text-gray-900">{book.title}</td>
                     <td className="px-6 py-4 text-gray-600">{book.author}</td>
                     <td className="px-6 py-4 text-gray-600 font-mono text-sm">{book.isbn}</td>
-                    <td className="px-6 py-4">{getStockBadge(book.available)}</td> {/* Use book.available */}
+                    <td className="px-6 py-4 text-gray-600">{book.category}</td>
+                    <td className="px-6 py-4">{getStockBadge(book.available)}</td>
                     <td className="px-6 py-4">
                       <div className="flex gap-2 justify-end">
                         <Button
