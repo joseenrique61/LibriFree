@@ -107,6 +107,7 @@ public class MembersController : ControllerBase
         member.LastName = memberDto.LastName;
         member.Dni = memberDto.Dni;
         member.Email = memberDto.Email;
+        member.Status = memberDto.Status;
 
         _context.Entry(member).State = EntityState.Modified;
 

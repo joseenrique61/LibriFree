@@ -1,0 +1,146 @@
+/* LibriFree Custom Theme */
+
+/* ============================== */
+/* shadcn/ui Base Color Utilities */
+/* ============================== */
+
+/* Background utilities */
+.bg-background { background-color: var(--background) !important; }
+.bg-popover { background-color: var(--popover) !important; }
+.bg-primary { background-color: var(--primary) !important; }
+.bg-secondary { background-color: var(--secondary) !important; }
+.bg-muted { background-color: var(--muted) !important; }
+.bg-accent { background-color: var(--accent) !important; }
+.bg-card { background-color: var(--card) !important; }
+.bg-destructive { background-color: var(--destructive) !important; }
+.bg-input-background { background-color: var(--input-background) !important; }
+
+/* Text utilities */
+.text-foreground { color: var(--foreground) !important; }
+.text-popover-foreground { color: var(--popover-foreground) !important; }
+.text-primary { color: var(--primary) !important; }
+.text-primary-foreground { color: var(--primary-foreground) !important; }
+.text-secondary-foreground { color: var(--secondary-foreground) !important; }
+.text-muted-foreground { color: var(--muted-foreground) !important; }
+.text-accent-foreground { color: var(--accent-foreground) !important; }
+.text-card-foreground { color: var(--card-foreground) !important; }
+.text-destructive { color: var(--destructive) !important; }
+.text-destructive-foreground { color: var(--destructive-foreground) !important; }
+
+/* Border utilities */
+.border-border { border-color: var(--border) !important; }
+.border-input { border-color: var(--input) !important; }
+
+/* Focus states */
+.focus\:bg-accent:focus { background-color: var(--accent) !important; }
+.focus\:text-accent-foreground:focus { color: var(--accent-foreground) !important; }
+
+/* Hover states */
+.hover\:bg-accent:hover { background-color: var(--accent) !important; }
+.hover\:text-accent-foreground:hover { color: var(--accent-foreground) !important; }
+.hover\:bg-primary\/90:hover { background-color: color-mix(in srgb, var(--primary) 90%, transparent) !important; }
+.hover\:bg-secondary\/80:hover { background-color: color-mix(in srgb, var(--secondary) 80%, transparent) !important; }
+.hover\:bg-destructive\/90:hover { background-color: color-mix(in srgb, var(--destructive) 90%, transparent) !important; }
+
+/* Sidebar colors */
+.bg-sidebar { background-color: var(--sidebar) !important; }
+.text-sidebar-foreground { color: var(--sidebar-foreground) !important; }
+.text-sidebar-primary { color: var(--sidebar-primary) !important; }
+.bg-sidebar-accent { background-color: var(--sidebar-accent) !important; }
+.text-sidebar-accent-foreground { color: var(--sidebar-accent-foreground) !important; }
+.border-sidebar-border { border-color: var(--sidebar-border) !important; }
+
+/* Ring */
+.ring-ring\/50 { --tw-ring-color: color-mix(in srgb, var(--ring) 50%, transparent) !important; }
+
+/* Ensure text-white works on buttons */
+.text-white { color: #ffffff !important; }
+
+/* Background colors */
+.bg-\[var\(--library-leather\)\] { background-color: var(--library-leather) !important; }
+.bg-\[var\(--library-leather-dark\)\] { background-color: var(--library-leather-dark) !important; }
+.bg-\[var\(--library-parchment\)\] { background-color: var(--library-parchment) !important; }
+.bg-\[var\(--library-forest\)\] { background-color: var(--library-forest) !important; }
+.bg-\[var\(--library-forest-dark\)\] { background-color: var(--library-forest-dark) !important; }
+.bg-\[var\(--library-gold\)\] { background-color: var(--library-gold) !important; }
+.bg-\[var\(--library-gold-dark\)\] { background-color: var(--library-gold-dark) !important; }
+.bg-\[var\(--library-burgundy\)\] { background-color: var(--library-burgundy) !important; }
+.bg-\[var\(--library-wood\)\] { background-color: var(--library-wood) !important; }
+.bg-\[var\(--library-wood-medium\)\] { background-color: var(--library-wood-medium) !important; }
+.bg-\[var\(--library-cream\)\] { background-color: var(--library-cream) !important; }
+
+/* Text colors */
+.text-\[var\(--library-leather\)\] { color: var(--library-leather) !important; }
+.text-\[var\(--library-parchment\)\] { color: var(--library-parchment) !important; }
+.text-\[var\(--library-forest\)\] { color: var(--library-forest) !important; }
+.text-\[var\(--library-gold\)\] { color: var(--library-gold) !important; }
+.text-\[var\(--library-gold-dark\)\] { color: var(--library-gold-dark) !important; }
+.text-\[var\(--library-burgundy\)\] { color: var(--library-burgundy) !important; }
+.text-\[var\(--library-wood\)\] { color: var(--library-wood) !important; }
+.text-\[var\(--library-wood-medium\)\] { color: var(--library-wood-medium) !important; }
+
+/* Border colors */
+.border-\[var\(--library-leather\)\] { border-color: var(--library-leather) !important; }
+.border-\[var\(--library-forest\)\] { border-color: var(--library-forest) !important; }
+.border-\[var\(--library-gold\)\] { border-color: var(--library-gold) !important; }
+.border-\[var\(--library-burgundy\)\] { border-color: var(--library-burgundy) !important; }
+.border-\[var\(--library-wood-medium\)\] { border-color: var(--library-wood-medium) !important; }
+
+/* Hover backgrounds */
+.hover\:bg-\[var\(--library-leather\)\]:hover { background-color: var(--library-leather) !important; }
+.hover\:bg-\[var\(--library-leather-dark\)\]:hover { background-color: var(--library-leather-dark) !important; }
+.hover\:bg-\[var\(--library-forest-dark\)\]:hover { background-color: var(--library-forest-dark) !important; }
+.hover\:bg-\[var\(--library-wood-medium\)\]:hover { background-color: var(--library-wood-medium) !important; }
+.hover\:bg-\[var\(--library-parchment\)\]:hover { background-color: var(--library-parchment) !important; }
+.hover\:bg-\[var\(--library-gold-dark\)\]:hover { background-color: var(--library-gold-dark) !important; }
+
+/* Opacity variants */
+.bg-\[var\(--library-leather\)\]\/5 { background-color: rgb(139 69 19 / 0.05) !important; }
+.bg-\[var\(--library-leather\)\]\/10 { background-color: rgb(139 69 19 / 0.1) !important; }
+.bg-\[var\(--library-forest\)\]\/5 { background-color: rgb(45 90 61 / 0.05) !important; }
+.bg-\[var\(--library-forest\)\]\/10 { background-color: rgb(45 90 61 / 0.1) !important; }
+.bg-\[var\(--library-burgundy\)\]\/5 { background-color: rgb(114 47 55 / 0.05) !important; }
+.bg-\[var\(--library-parchment\)\]\/50 { background-color: rgb(245 240 230 / 0.5) !important; }
+.bg-\[var\(--library-burgundy\)\]\/90 { background-color: rgb(114 47 55 / 0.9) !important; }
+
+/* Border opacity */
+.border-\[var\(--library-leather\)\]\/20 { border-color: rgb(139 69 19 / 0.2) !important; }
+.border-\[var\(--library-leather\)\]\/30 { border-color: rgb(139 69 19 / 0.3) !important; }
+.border-\[var\(--library-forest\)\]\/20 { border-color: rgb(45 90 61 / 0.2) !important; }
+.border-\[var\(--library-forest\)\]\/30 { border-color: rgb(45 90 61 / 0.3) !important; }
+.border-\[var\(--library-burgundy\)\]\/20 { border-color: rgb(114 47 55 / 0.2) !important; }
+.border-\[var\(--library-gold\)\]\/30 { border-color: rgb(196 163 90 / 0.3) !important; }
+
+/* Text opacity */
+.text-\[var\(--library-leather\)\]\/10 { color: rgb(139 69 19 / 0.1) !important; }
+.text-\[var\(--library-leather\)\]\/50 { color: rgb(139 69 19 / 0.5) !important; }
+.text-\[var\(--library-leather\)\]\/60 { color: rgb(139 69 19 / 0.6) !important; }
+.text-\[var\(--library-forest\)\]\/10 { color: rgb(45 90 61 / 0.1) !important; }
+.text-\[var\(--library-burgundy\)\]\/10 { color: rgb(114 47 55 / 0.1) !important; }
+.text-\[var\(--library-gold\)\]\/60 { color: rgb(196 163 90 / 0.6) !important; }
+.text-\[var\(--library-parchment\)\]\/60 { color: rgb(245 240 230 / 0.6) !important; }
+.text-\[var\(--library-parchment\)\]\/70 { color: rgb(245 240 230 / 0.7) !important; }
+.text-\[var\(--library-parchment\)\]\/80 { color: rgb(245 240 230 / 0.8) !important; }
+
+/* Hover text colors */
+.hover\:text-\[var\(--library-parchment\)\]:hover { color: var(--library-parchment) !important; }
+.hover\:text-\[var\(--library-gold\)\]:hover { color: var(--library-gold) !important; }
+.hover\:text-\[var\(--library-gold-dark\)\]:hover { color: var(--library-gold-dark) !important; }
+.hover\:text-\[var\(--library-burgundy\)\]:hover { color: var(--library-burgundy) !important; }
+.hover\:text-\[var\(--library-leather-dark\)\]:hover { color: var(--library-leather-dark) !important; }
+
+/* Hover border colors */
+.hover\:border-\[var\(--library-burgundy\)\]:hover { border-color: var(--library-burgundy) !important; }
+
+/* From/To gradients */
+.from-\[var\(--library-parchment\)\] { --tw-gradient-from: var(--library-parchment) !important; }
+.to-\[var\(--library-cream\)\] { --tw-gradient-to: var(--library-cream) !important; }
+
+/* Hover with opacity */
+.hover\:bg-\[var\(--library-forest\)\]\/10:hover { background-color: rgb(45 90 61 / 0.1) !important; }
+.hover\:bg-\[var\(--library-leather\)\]\/5:hover { background-color: rgb(139 69 19 / 0.05) !important; }
+.hover\:bg-\[var\(--library-wood-medium\)\]\/50:hover { background-color: rgb(93 64 55 / 0.5) !important; }
+.hover\:bg-\[var\(--library-burgundy\)\]\/10:hover { background-color: rgb(114 47 55 / 0.1) !important; }
+.hover\:bg-\[var\(--library-burgundy\)\]\/30:hover { background-color: rgb(114 47 55 / 0.3) !important; }
+.hover\:bg-\[var\(--library-burgundy\)\]\/90:hover { background-color: rgb(114 47 55 / 0.9) !important; }
+.hover\:bg-\[var\(--library-gold\)\]\/10:hover { background-color: rgb(196 163 90 / 0.1) !important; }

@@ -150,7 +150,7 @@ export function MemberFormModal({
           <div className="space-y-6 py-4">
             {/* First Name */}
             <div className="space-y-2">
-              <Label htmlFor="firstName" className="text-gray-700">
+              <Label htmlFor="firstName" className="text-[var(--library-wood)]">
                 Nombre
               </Label>
               <Input
@@ -160,14 +160,14 @@ export function MemberFormModal({
                   setFormData({ ...formData, firstName: e.target.value })
                 }
                 placeholder="Ej: María"
-                className="bg-gray-50 border-gray-300"
+                className="bg-[var(--library-parchment)] border-[var(--library-leather)]/20 focus:border-[var(--library-leather)] focus:ring-library-leather/20"
                 required
               />
             </div>
 
             {/* Last Name */}
             <div className="space-y-2">
-              <Label htmlFor="lastName" className="text-gray-700">
+              <Label htmlFor="lastName" className="text-[var(--library-wood)]">
                 Apellido
               </Label>
               <Input
@@ -177,14 +177,14 @@ export function MemberFormModal({
                   setFormData({ ...formData, lastName: e.target.value })
                 }
                 placeholder="Ej: González"
-                className="bg-gray-50 border-gray-300"
+                className="bg-[var(--library-parchment)] border-[var(--library-leather)]/20 focus:border-[var(--library-leather)] focus:ring-library-leather/20"
                 required
               />
             </div>
 
             {/* DNI */}
             <div className="space-y-2">
-              <Label htmlFor="dni" className="text-gray-700">
+              <Label htmlFor="dni" className="text-[var(--library-wood)]">
                 Cédula de Identidad
               </Label>
               <Input
@@ -192,7 +192,7 @@ export function MemberFormModal({
                 value={formData.dni}
                 onChange={handleDniChange}
                 placeholder="Ej: 1234567890"
-                className={`border-gray-300 font-mono ${member ? "bg-gray-200 cursor-not-allowed" : "bg-gray-50"} ${dniError ? 'border-red-500' : ''}`}
+                className={`border-[var(--library-leather)]/20 font-mono ${member ? "bg-gray-200 cursor-not-allowed" : "bg-[var(--library-parchment)]"} ${dniError ? 'border-red-500' : ''}`}
                 maxLength={10}
                 required
                 disabled={!!member}
@@ -208,7 +208,7 @@ export function MemberFormModal({
 
             {/* Email */}
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-700">
+              <Label htmlFor="email" className="text-[var(--library-wood)]">
                 Correo Electrónico
               </Label>
               <Input
@@ -219,7 +219,7 @@ export function MemberFormModal({
                   setFormData({ ...formData, email: e.target.value })
                 }
                 placeholder="Ej: maria.gonzalez@email.com"
-                className="bg-gray-50 border-gray-300"
+                className="bg-[var(--library-parchment)] border-[var(--library-leather)]/20 focus:border-[var(--library-leather)] focus:ring-library-leather/20"
                 required
               />
             </div>
@@ -261,13 +261,13 @@ export function MemberFormModal({
               type="button"
               variant="outline"
               onClick={onClose}
-              className="border-gray-300 text-gray-700 hover:bg-gray-100"
+              className="border-[var(--library-leather)]/30 text-[var(--library-wood-medium)] hover:bg-[var(--library-leather)]/5"
             >
               Cancelar
             </Button>
             <Button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
+              className="bg-[var(--library-forest)] hover:bg-[var(--library-forest-dark)] text-white shadow-md disabled:opacity-50"
               disabled={!!dniError}
             >
               {member ? "Guardar Cambios" : "Registrar Miembro"}
