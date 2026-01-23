@@ -10,48 +10,95 @@ import {
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { BookDto, BookInputDto } from '../utils/apiClient'; // Import BookDto and BookInputDto
+import { BookDto, BookInputDto } from '../utils/apiClient';
 
 interface BookFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (book: BookInputDto) => void; // onSave expects BookInputDto
-  book?: BookDto | null; // book prop uses BookDto
+  onSave: (book: BookInputDto) => void;
+  book?: BookDto | null;
 }
 
+const validateIsbn = (isbn: string): string => {
+  if (!isbn) {
+    return ''; // Let 'required' attribute handle empty input
+  }
+
+  const cleanedIsbn = isbn.replace(/[-\s]/g, '');
+
+  if (!/^\d+$/.test(cleanedIsbn)) {
+    return 'El ISBN solo debe contener números.';
+  }
+
+  if (cleanedIsbn.length !== 13) {
+    return 'El ISBN debe tener 13 dígitos.';
+  }
+
+  const digits = cleanedIsbn.split('').map(Number);
+  const checkDigit = digits.pop();
+
+  if (typeof checkDigit === 'undefined') {
+    return 'ISBN inválido.'; // Should not be reached
+  }
+
+  const sum = digits.reduce((acc, digit, i) => acc + digit * (i % 2 === 0 ? 1 : 3), 0);
+  const calculatedCheckDigit = (10 - (sum % 10)) % 10;
+
+  if (checkDigit !== calculatedCheckDigit) {
+    return 'El dígito de verificación del ISBN es inválido.';
+  }
+
+  return ''; // ISBN is valid
+};
+
 export function BookFormModal({ isOpen, onClose, onSave, book }: BookFormModalProps) {
-  const [formData, setFormData] = useState<BookInputDto>({ // Initialize with BookInputDto structure
+  const [formData, setFormData] = useState<BookInputDto>({
     title: '',
     author: '',
     isbn: '',
-    category: '', // Added category
+    category: '',
     stock: 0,
   });
+  const [isbnError, setIsbnError] = useState('');
 
   useEffect(() => {
-    if (book) {
-      setFormData({
-        title: book.title,
-        author: book.author,
-        isbn: book.isbn,
-        category: book.category, // Set category from book
-        stock: book.stock,
-      });
-    } else {
-      setFormData({
-        title: '',
-        author: '',
-        isbn: '',
-        category: '',
-        stock: 0,
-      });
+    if (isOpen) {
+      if (book) {
+        setFormData({
+          title: book.title,
+          author: book.author,
+          isbn: book.isbn,
+          category: book.category,
+          stock: book.stock,
+        });
+        setIsbnError(validateIsbn(book.isbn)); // Validate existing ISBN
+      } else {
+        setFormData({
+          title: '',
+          author: '',
+          isbn: '',
+          category: '',
+          stock: 0,
+        });
+        setIsbnError(''); // Reset for new entry
+      }
     }
   }, [book, isOpen]);
 
+  const handleIsbnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newIsbn = e.target.value;
+    setFormData({ ...formData, isbn: newIsbn });
+    setIsbnError(validateIsbn(newIsbn));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const currentIsbnError = validateIsbn(formData.isbn);
+    if (currentIsbnError) {
+      setIsbnError(currentIsbnError);
+      return;
+    }
     onSave(formData);
-    // onClose() is now handled by the parent after API call
   };
 
   return (
@@ -106,11 +153,15 @@ export function BookFormModal({ isOpen, onClose, onSave, book }: BookFormModalPr
               <Input
                 id="isbn"
                 value={formData.isbn}
-                onChange={(e) => setFormData({ ...formData, isbn: e.target.value })}
-                placeholder="Ej: 978-0060883287"
-                className="bg-gray-50 border-gray-300 font-mono"
+                onChange={handleIsbnChange}
+                placeholder="Ej: 9780060883287"
+                className={`bg-gray-50 border-gray-300 font-mono ${
+                  isbnError ? 'border-red-500' : ''
+                }`}
+                maxLength="13"
                 required
               />
+              {isbnError && <p className="text-sm text-red-500 mt-1">{isbnError}</p>}
             </div>
 
             {/* Category */}
@@ -138,7 +189,9 @@ export function BookFormModal({ isOpen, onClose, onSave, book }: BookFormModalPr
                 type="number"
                 min="0"
                 value={formData.stock}
-                onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
+                onChange={(e) =>
+                  setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })
+                }
                 className="bg-gray-50 border-gray-300"
                 required
               />
@@ -156,7 +209,8 @@ export function BookFormModal({ isOpen, onClose, onSave, book }: BookFormModalPr
             </Button>
             <Button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
+              disabled={!!isbnError && formData.isbn.length > 0}
             >
               {book ? 'Guardar Cambios' : 'Registrar Libro'}
             </Button>

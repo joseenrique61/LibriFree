@@ -53,6 +53,11 @@ public class BooksController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<BookDto>> CreateBook([FromBody] BookInputDto bookDto)
     {
+        if (_context.Books.Where((b) => b.Isbn == bookDto.Isbn).Any())
+        {
+            return BadRequest("Ya existe un libro registrado con el ISBN especificado.");
+        }
+
         var book = new Book
         {
             Title = bookDto.Title,

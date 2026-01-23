@@ -233,11 +233,8 @@ function App() {
     setIsLoanFormOpen(true);
   };
 
-  const handleSaveLoan = async (bookId: number, memberId: number) => {
+  const handleSaveLoan = async (bookId: number, memberId: number, dueDate: Date) => {
     try {
-      const dueDate = new Date();
-      dueDate.setDate(dueDate.getDate() + 7);
-
       await apiClient('/Loans', {
         method: 'POST',
         body: JSON.stringify({

@@ -47,6 +47,7 @@ export interface MemberDto {
     lastName: string;
     dni: string;
     email: string;
+    status: boolean;
 }
 
 export interface MemberInputDto {
@@ -54,6 +55,7 @@ export interface MemberInputDto {
     lastName: string;
     dni: string;
     email: string;
+    status: boolean;
 }
 
 export interface LoanDto {
@@ -104,12 +106,7 @@ export async function apiClient<T>(
     if (!response.ok) {
         // Attempt to parse error message from backend
         let errorData: ErrorDto | { message: string } = { code: response.status, message: 'An unknown error occurred.' };
-        try {
-            errorData = await response.json();
-        } catch (e) {
-            // If response is not JSON, use status text
-            errorData.message = response.statusText;
-        }
+        errorData.message = await response.text() || response.statusText;
         throw new Error(errorData.message || 'Something went wrong with the request.');
     }
 

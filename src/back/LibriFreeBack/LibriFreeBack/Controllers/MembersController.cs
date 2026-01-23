@@ -29,7 +29,8 @@ public class MembersController : ControllerBase
                 FirstName = m.FirstName,
                 LastName = m.LastName,
                 Dni = m.Dni,
-                Email = m.Email
+                Email = m.Email,
+                Status = m.Status
             })
             .ToListAsync();
             
@@ -39,12 +40,18 @@ public class MembersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<MemberDto>> CreateMember([FromBody] MemberInputDto memberDto)
     {
+        if (_context.Members.Where((e) => e.Dni == memberDto.Dni).Any())
+        {
+            return BadRequest("Ya existe un miembro con el DNI especificado.");
+        }
+
         var member = new Member
         {
             FirstName = memberDto.FirstName,
             LastName = memberDto.LastName,
             Dni = memberDto.Dni,
-            Email = memberDto.Email
+            Email = memberDto.Email,
+            Status = memberDto.Status
         };
 
         _context.Members.Add(member);
@@ -56,7 +63,8 @@ public class MembersController : ControllerBase
             FirstName = member.FirstName,
             LastName = member.LastName,
             Dni = member.Dni,
-            Email = member.Email
+            Email = member.Email,
+            Status = member.Status
         };
 
         return CreatedAtAction(nameof(GetMemberById), new { id = member.Id }, memberResponse);
@@ -72,7 +80,8 @@ public class MembersController : ControllerBase
                 FirstName = m.FirstName,
                 LastName = m.LastName,
                 Dni = m.Dni,
-                Email = m.Email
+                Email = m.Email,
+                Status = m.Status
             })
             .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -117,7 +126,7 @@ public class MembersController : ControllerBase
             }
         }
 
-        return Ok();
+        return NoContent();
     }
 
     [HttpGet("{id}/loans")]

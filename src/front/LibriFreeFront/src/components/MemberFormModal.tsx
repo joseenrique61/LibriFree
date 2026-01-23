@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,11 +6,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from './ui/dialog';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { MemberDto, MemberInputDto } from '../utils/apiClient';
+} from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Switch } from "./ui/switch";
+import { UserCheck, UserX } from "lucide-react";
+import { MemberDto, MemberInputDto } from "../utils/apiClient";
 
 interface MemberFormModalProps {
   isOpen: boolean;
@@ -19,34 +21,114 @@ interface MemberFormModalProps {
   member?: MemberDto | null;
 }
 
-export function MemberFormModal({ isOpen, onClose, onSave, member }: MemberFormModalProps) {
-  const [formData, setFormData] = useState<MemberInputDto>({
-    firstName: '',
-    lastName: '',
-    dni: '',
-    email: '',
+// Moved outside the component to prevent re-creation on every render
+function verifyEcuadorianDni(dni: string): string {
+  if (!dni) {
+    return ''; // Let 'required' attribute handle empty input
+  }
+
+  if (dni.length !== 10) {
+    return 'La cédula debe tener 10 dígitos.';
+  }
+
+  const numberPattern = /^\d+$/;
+  if (!numberPattern.test(dni)) {
+    return 'La cédula solo debe contener números.';
+  }
+
+  const provinceDigit = parseInt(dni.substring(0, 2));
+  if (provinceDigit > 24 && provinceDigit !== 30) {
+    return 'El código de provincia de la cédula es inválido.';
+  }
+
+  let even: number[] = [];
+  let odd: number[] = [];
+
+  // Note: they are in inverse order (odd when i modulo 2 equals 0 and viceversa) because of how substring works
+  for (let i = 0; i < dni.length - 1; i++) {
+    if (i % 2 === 0) {
+      odd.push(parseInt(dni.substring(i, i + 1)));
+    } else {
+      even.push(parseInt(dni.substring(i, i + 1)));
+    }
+  }
+
+  odd = odd.map((a) => {
+    let result = a * 2;
+    if (result > 9) {
+      result -= 9;
+    }
+    return result;
   });
 
+  const sum =
+    odd.reduce((acc, current) => acc + current) +
+    even.reduce((acc, current) => acc + current);
+
+  let verifyingDigit = sum % 10;
+  if (verifyingDigit !== 0) {
+    verifyingDigit = 10 - verifyingDigit;
+  }
+
+  if (parseInt(dni.substring(dni.length - 1, dni.length)) !== verifyingDigit) {
+    return 'El dígito verificador de la cédula es inválido.';
+  }
+
+  return ''; // DNI is valid
+}
+
+export function MemberFormModal({
+  isOpen,
+  onClose,
+  onSave,
+  member,
+}: MemberFormModalProps) {
+  const [formData, setFormData] = useState<MemberInputDto>({
+    firstName: "",
+    lastName: "",
+    dni: "",
+    email: "",
+    status: true, // Default to active
+  });
+  const [dniError, setDniError] = useState('');
+
   useEffect(() => {
-    if (member) {
-      setFormData({
-        firstName: member.firstName,
-        lastName: member.lastName,
-        dni: member.dni,
-        email: member.email,
-      });
-    } else {
-      setFormData({
-        firstName: '',
-        lastName: '',
-        dni: '',
-        email: '',
-      });
+    if (isOpen) {
+      if (member) {
+        setFormData({
+          firstName: member.firstName,
+          lastName: member.lastName,
+          dni: member.dni,
+          email: member.email,
+          status: member.status,
+        });
+        setDniError(verifyEcuadorianDni(member.dni)); // Validate existing DNI
+      } else {
+        setFormData({
+          firstName: "",
+          lastName: "",
+          dni: "",
+          email: "",
+          status: true, // Default to active for new members
+        });
+        setDniError(''); // Reset for new entry
+      }
     }
   }, [member, isOpen]);
 
+  const handleDniChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newDni = e.target.value;
+    setFormData({ ...formData, dni: newDni });
+    setDniError(verifyEcuadorianDni(newDni));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const currentDniError = verifyEcuadorianDni(formData.dni);
+    if (currentDniError) {
+      setDniError(currentDniError);
+      return;
+    }
     onSave(formData);
   };
 
@@ -54,11 +136,13 @@ export function MemberFormModal({ isOpen, onClose, onSave, member }: MemberFormM
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>{member ? 'Editar Miembro' : 'Registrar Nuevo Miembro'}</DialogTitle>
+          <DialogTitle>
+            {member ? "Editar Miembro" : "Registrar Nuevo Miembro"}
+          </DialogTitle>
           <DialogDescription>
             {member
-              ? 'Actualiza la información del miembro. El DNI no puede ser modificado.'
-              : 'Completa los datos para agregar un nuevo miembro al sistema.'}
+              ? "Actualiza la información del miembro. La cédula no puede ser modificada."
+              : "Completa los datos para agregar un nuevo miembro al sistema."}
           </DialogDescription>
         </DialogHeader>
 
@@ -72,7 +156,9 @@ export function MemberFormModal({ isOpen, onClose, onSave, member }: MemberFormM
               <Input
                 id="firstName"
                 value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstName: e.target.value })
+                }
                 placeholder="Ej: María"
                 className="bg-gray-50 border-gray-300"
                 required
@@ -87,7 +173,9 @@ export function MemberFormModal({ isOpen, onClose, onSave, member }: MemberFormM
               <Input
                 id="lastName"
                 value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, lastName: e.target.value })
+                }
                 placeholder="Ej: González"
                 className="bg-gray-50 border-gray-300"
                 required
@@ -97,20 +185,24 @@ export function MemberFormModal({ isOpen, onClose, onSave, member }: MemberFormM
             {/* DNI */}
             <div className="space-y-2">
               <Label htmlFor="dni" className="text-gray-700">
-                DNI / Cédula
+                Cédula de Identidad
               </Label>
               <Input
                 id="dni"
                 value={formData.dni}
-                onChange={(e) => setFormData({ ...formData, dni: e.target.value })}
-                placeholder="Ej: 12345678A"
-                className={`border-gray-300 font-mono ${member ? 'bg-gray-200 cursor-not-allowed' : 'bg-gray-50'}`}
+                onChange={handleDniChange}
+                placeholder="Ej: 1234567890"
+                className={`border-gray-300 font-mono ${member ? "bg-gray-200 cursor-not-allowed" : "bg-gray-50"} ${dniError ? 'border-red-500' : ''}`}
+                maxLength={10}
                 required
-                disabled={!!member} // DNI is immutable when editing (US07)
-                title={member ? 'El DNI no puede ser modificado' : ''}
+                disabled={!!member}
+                title={member ? "La cédula no puede ser modificada" : ""}
               />
+              {dniError && <p className="text-sm text-red-500 mt-1">{dniError}</p>}
               {member && (
-                <p className="text-xs text-gray-500">El DNI no puede ser modificado por seguridad</p>
+                <p className="text-xs text-gray-500">
+                  La cédula no puede ser modificada por seguridad
+                </p>
               )}
             </div>
 
@@ -123,11 +215,44 @@ export function MemberFormModal({ isOpen, onClose, onSave, member }: MemberFormM
                 id="email"
                 type="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 placeholder="Ej: maria.gonzalez@email.com"
                 className="bg-gray-50 border-gray-300"
                 required
               />
+            </div>
+
+            {/* Status */}
+            <div className="space-y-2">
+              <Label htmlFor="status" className="text-gray-700">
+                Estado del Miembro
+              </Label>
+              <div className="flex items-center space-x-3 rounded-lg border border-gray-200 p-3">
+                {formData.status ? (
+                  <UserCheck className="h-5 w-5 text-green-600" />
+                ) : (
+                  <UserX className="h-5 w-5 text-red-600" />
+                )}
+                <div className="flex-grow">
+                  <p className="font-medium text-gray-800">
+                    {formData.status ? "Activo" : "Inactivo"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {formData.status
+                      ? "El miembro puede solicitar préstamos."
+                      : "El miembro no puede solicitar préstamos."}
+                  </p>
+                </div>
+                <Switch
+                  id="status"
+                  checked={formData.status}
+                  onCheckedChange={(checked) =>
+                    setFormData({ ...formData, status: checked })
+                  }
+                />
+              </div>
             </div>
           </div>
 
@@ -142,9 +267,10 @@ export function MemberFormModal({ isOpen, onClose, onSave, member }: MemberFormM
             </Button>
             <Button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
+              disabled={!!dniError}
             >
-              {member ? 'Guardar Cambios' : 'Registrar Miembro'}
+              {member ? "Guardar Cambios" : "Registrar Miembro"}
             </Button>
           </DialogFooter>
         </form>
