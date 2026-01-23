@@ -87,7 +87,7 @@ export function LoanFormModal({ isOpen, onClose, onSave, books, members }: LoanF
                 Libro
               </Label>
               <Select value={selectedBookId} onValueChange={setSelectedBookId}>
-                <SelectTrigger className="bg-gray-50 border-gray-300">
+                <SelectTrigger className="bg-[var(--library-parchment)] border-[var(--library-leather)]/20 focus:border-[var(--library-leather)] focus:ring-library-leather/20">
                   <SelectValue placeholder="Selecciona un libro..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -125,7 +125,7 @@ export function LoanFormModal({ isOpen, onClose, onSave, books, members }: LoanF
                 Miembro
               </Label>
               <Select value={selectedMemberId} onValueChange={setSelectedMemberId}>
-                <SelectTrigger className="bg-gray-50 border-gray-300">
+                <SelectTrigger className="bg-[var(--library-parchment)] border-[var(--library-leather)]/20 focus:border-[var(--library-leather)] focus:ring-library-leather/20">
                   <SelectValue placeholder="Selecciona un miembro..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -189,13 +189,13 @@ export function LoanFormModal({ isOpen, onClose, onSave, books, members }: LoanF
               type="button"
               variant="outline"
               onClick={onClose}
-              className="border-gray-300 text-gray-700 hover:bg-gray-100"
+              className="border-[var(--library-leather)]/30 text-[var(--library-wood-medium)] hover:bg-[var(--library-leather)]/5"
             >
               Cancelar
             </Button>
             <Button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-[var(--library-forest)] hover:bg-[var(--library-forest-dark)] text-white shadow-md"
               disabled={!selectedBookId || !selectedMemberId}
             >
               Registrar Préstamo

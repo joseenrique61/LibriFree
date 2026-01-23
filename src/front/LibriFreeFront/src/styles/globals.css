@@ -39,6 +39,28 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Paleta Biblioteca - Tema LibriFree */
+  --library-leather: #8B4513;
+  --library-leather-dark: #6B3410;
+  --library-parchment: #F5F0E6;
+  --library-parchment-light: #FAF8F3;
+  --library-forest: #2D5A3D;
+  --library-forest-dark: #1E3D28;
+  --library-gold: #C4A35A;
+  --library-gold-dark: #9A7B3D;
+  --library-burgundy: #722F37;
+  --library-wood: #3E2723;
+  --library-wood-medium: #5D4037;
+  --library-cream: #FFFEF9;
+
+  /* Estados semánticos biblioteca */
+  --status-success: #4A7C59;
+  --status-success-bg: #E8F5E9;
+  --status-warning: #C4A35A;
+  --status-warning-bg: #FFF8E1;
+  --status-danger: #722F37;
+  --status-danger-bg: #FFEBEE;
 }
 
 .dark {

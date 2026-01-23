@@ -110,10 +110,16 @@ export async function apiClient<T>(
         throw new Error(errorData.message || 'Something went wrong with the request.');
     }
 
-    // Handle 204 No Content
-    if (response.status === 204) {
+    // Handle empty responses (204 No Content or any 2xx with no body)
+    const contentLength = response.headers.get('content-length');
+    if (response.status === 204 || contentLength === '0') {
         return null as T;
     }
 
-    return response.json();
+    const text = await response.text();
+    if (!text) {
+        return null as T;
+    }
+
+    return JSON.parse(text);
 }

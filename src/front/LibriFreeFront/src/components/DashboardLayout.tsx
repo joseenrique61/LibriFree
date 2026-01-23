@@ -1,5 +1,5 @@
-import { ReactNode, useState } from 'react';
-import { BookOpen, Users, FileText, LogOut } from 'lucide-react';
+import { ReactNode } from 'react';
+import { Library, Users, ScrollText, LogOut } from 'lucide-react';
 import { Button } from './ui/button';
 
 interface DashboardLayoutProps {
@@ -11,24 +11,24 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children, activeSection, onSectionChange, onLogout }: DashboardLayoutProps) {
   const navItems = [
-    { id: 'libros', label: 'Libros', icon: BookOpen },
-    { id: 'miembros', label: 'Miembros', icon: Users },
-    { id: 'prestamos', label: 'Préstamos', icon: FileText },
+    { id: 'libros', label: 'Catálogo', icon: Library },
+    { id: 'miembros', label: 'Socios', icon: Users },
+    { id: 'prestamos', label: 'Préstamos', icon: ScrollText },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
+    <div className="min-h-screen bg-[var(--library-cream)] flex">
+      {/* Sidebar - Madera Oscura */}
+      <aside className="w-64 bg-[var(--library-wood)] flex flex-col shadow-xl">
         {/* Logo Header */}
-        <div className="p-6 border-b border-gray-200">
+        <div className="p-6 border-b border-[var(--library-wood-medium)]">
           <div className="flex items-center gap-3">
-            <div className="bg-blue-600 rounded-lg p-2">
-              <BookOpen className="w-6 h-6 text-white" />
+            <div className="bg-[var(--library-leather)] rounded-lg p-2.5 shadow-md">
+              <Library className="w-6 h-6 text-[var(--library-gold)]" />
             </div>
             <div>
-              <h2 className="text-gray-900">LibriFree</h2>
-              <p className="text-gray-500 text-sm">Gestión</p>
+              <h2 className="text-[var(--library-parchment)] font-['Playfair_Display'] text-xl">LibriFree</h2>
+              <p className="text-[var(--library-gold)] text-sm">Sistema de Biblioteca</p>
             </div>
           </div>
         </div>
@@ -38,18 +38,18 @@ export function DashboardLayout({ children, activeSection, onSectionChange, onLo
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.id;
-            
+
             return (
               <button
                 key={item.id}
                 onClick={() => onSectionChange(item.id)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                   isActive
-                    ? 'bg-blue-50 text-blue-600'
-                    : 'text-gray-700 hover:bg-gray-100'
+                    ? 'bg-[var(--library-wood-medium)] text-[var(--library-gold)] border-l-4 border-[var(--library-gold)]'
+                    : 'text-[var(--library-parchment)]/80 hover:bg-[var(--library-wood-medium)]/50 hover:text-[var(--library-parchment)]'
                 }`}
               >
-                <Icon className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-gray-500'}`} />
+                <Icon className={`w-5 h-5 ${isActive ? 'text-[var(--library-gold)]' : 'text-[var(--library-gold)]/60'}`} />
                 <span className={isActive ? 'font-medium' : ''}>{item.label}</span>
               </button>
             );
@@ -57,20 +57,20 @@ export function DashboardLayout({ children, activeSection, onSectionChange, onLo
         </nav>
 
         {/* User Section */}
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-[var(--library-wood-medium)]">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-              <span className="text-blue-600 font-medium">AB</span>
+            <div className="w-10 h-10 rounded-full bg-[var(--library-leather)] flex items-center justify-center border-2 border-[var(--library-gold)]">
+              <span className="text-[var(--library-gold)] font-medium">AB</span>
             </div>
             <div className="flex-1">
-              <p className="text-gray-900">Admin Biblioteca</p>
-              <p className="text-gray-500 text-sm">admin@biblioteca.com</p>
+              <p className="text-[var(--library-parchment)]">Admin Biblioteca</p>
+              <p className="text-[var(--library-parchment)]/60 text-sm">Bibliotecario</p>
             </div>
           </div>
           <Button
             onClick={onLogout}
             variant="outline"
-            className="w-full justify-start gap-2 text-gray-700 border-gray-300 hover:bg-gray-100"
+            className="w-full justify-start gap-2 text-[var(--library-parchment)]/70 border-[var(--library-wood-medium)] bg-transparent hover:bg-[var(--library-burgundy)]/30 hover:text-[var(--library-parchment)] hover:border-[var(--library-burgundy)]"
           >
             <LogOut className="w-4 h-4" />
             Cerrar Sesión
@@ -79,7 +79,7 @@ export function DashboardLayout({ children, activeSection, onSectionChange, onLo
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto bg-[var(--library-cream)]">
         {children}
       </main>
     </div>

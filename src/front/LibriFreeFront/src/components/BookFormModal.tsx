@@ -117,7 +117,7 @@ export function BookFormModal({ isOpen, onClose, onSave, book }: BookFormModalPr
           <div className="space-y-6 py-4">
             {/* Title */}
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-gray-700">
+              <Label htmlFor="title" className="text-[var(--library-wood)]">
                 Título del Libro
               </Label>
               <Input
@@ -125,14 +125,14 @@ export function BookFormModal({ isOpen, onClose, onSave, book }: BookFormModalPr
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 placeholder="Ej: Cien años de soledad"
-                className="bg-gray-50 border-gray-300"
+                className="bg-[var(--library-parchment)] border-[var(--library-leather)]/20 focus:border-[var(--library-leather)] focus:ring-library-leather/20"
                 required
               />
             </div>
 
             {/* Author */}
             <div className="space-y-2">
-              <Label htmlFor="author" className="text-gray-700">
+              <Label htmlFor="author" className="text-[var(--library-wood)]">
                 Autor
               </Label>
               <Input
@@ -140,14 +140,14 @@ export function BookFormModal({ isOpen, onClose, onSave, book }: BookFormModalPr
                 value={formData.author}
                 onChange={(e) => setFormData({ ...formData, author: e.target.value })}
                 placeholder="Ej: Gabriel García Márquez"
-                className="bg-gray-50 border-gray-300"
+                className="bg-[var(--library-parchment)] border-[var(--library-leather)]/20 focus:border-[var(--library-leather)] focus:ring-library-leather/20"
                 required
               />
             </div>
 
             {/* ISBN */}
             <div className="space-y-2">
-              <Label htmlFor="isbn" className="text-gray-700">
+              <Label htmlFor="isbn" className="text-[var(--library-wood)]">
                 ISBN
               </Label>
               <Input
@@ -155,7 +155,7 @@ export function BookFormModal({ isOpen, onClose, onSave, book }: BookFormModalPr
                 value={formData.isbn}
                 onChange={handleIsbnChange}
                 placeholder="Ej: 9780060883287"
-                className={`bg-gray-50 border-gray-300 font-mono ${
+                className={`bg-[var(--library-parchment)] border-[var(--library-leather)]/20 focus:border-[var(--library-leather)] font-mono ${
                   isbnError ? 'border-red-500' : ''
                 }`}
                 maxLength="13"
@@ -166,7 +166,7 @@ export function BookFormModal({ isOpen, onClose, onSave, book }: BookFormModalPr
 
             {/* Category */}
             <div className="space-y-2">
-              <Label htmlFor="category" className="text-gray-700">
+              <Label htmlFor="category" className="text-[var(--library-wood)]">
                 Categoría
               </Label>
               <Input
@@ -174,14 +174,14 @@ export function BookFormModal({ isOpen, onClose, onSave, book }: BookFormModalPr
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 placeholder="Ej: Novela, Ciencia Ficción, Historia"
-                className="bg-gray-50 border-gray-300"
+                className="bg-[var(--library-parchment)] border-[var(--library-leather)]/20 focus:border-[var(--library-leather)] focus:ring-library-leather/20"
                 required
               />
             </div>
 
             {/* Stock */}
             <div className="space-y-2">
-              <Label htmlFor="stock" className="text-gray-700">
+              <Label htmlFor="stock" className="text-[var(--library-wood)]">
                 Cantidad en Stock
               </Label>
               <Input
@@ -192,7 +192,7 @@ export function BookFormModal({ isOpen, onClose, onSave, book }: BookFormModalPr
                 onChange={(e) =>
                   setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })
                 }
-                className="bg-gray-50 border-gray-300"
+                className="bg-[var(--library-parchment)] border-[var(--library-leather)]/20 focus:border-[var(--library-leather)]"
                 required
               />
             </div>
@@ -203,13 +203,13 @@ export function BookFormModal({ isOpen, onClose, onSave, book }: BookFormModalPr
               type="button"
               variant="outline"
               onClick={onClose}
-              className="border-gray-300 text-gray-700 hover:bg-gray-100"
+              className="border-[var(--library-leather)]/30 text-[var(--library-wood-medium)] hover:bg-[var(--library-leather)]/5"
             >
               Cancelar
             </Button>
             <Button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
+              className="bg-[var(--library-forest)] hover:bg-[var(--library-forest-dark)] text-white shadow-md disabled:opacity-50"
               disabled={!!isbnError && formData.isbn.length > 0}
             >
               {book ? 'Guardar Cambios' : 'Registrar Libro'}

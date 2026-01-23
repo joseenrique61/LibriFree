@@ -20,10 +20,9 @@ public class LoansController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<LoanDto>>> GetActiveLoans()
+    public async Task<ActionResult<IEnumerable<LoanDto>>> GetLoans()
     {
         var loans = await _context.Loans
-            .Where(l => l.Status == LoanStatus.Active)
             .Include(l => l.Book)
             .Include(l => l.Member)
             .Select(l => new LoanDto
