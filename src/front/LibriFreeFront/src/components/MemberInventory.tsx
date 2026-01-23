@@ -76,7 +76,7 @@ export function MemberInventory({
                     <td className="px-6 py-4 text-gray-600 font-mono text-sm">{member.dni}</td>
                     <td className="px-6 py-4 text-gray-600">{member.email}</td>
                     <td className="px-6 py-4">
-                      <Badge className="bg-green-100 text-green-700 hover:bg-green-100">Activo</Badge>
+                      <Badge className={member.status ? "bg-green-100 text-green-700 hover:bg-green-100" : "bg-green-100 text-green-700 hover:bg-green-100"}>{member.status ? "Activo" : "Inactivo"}</Badge>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex gap-2 justify-end">

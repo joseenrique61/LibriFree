@@ -22,6 +22,9 @@ public class Member
     [StringLength(100)]
     [EmailAddress]
     public required string Email { get; set; }
+
+    [Required]
+    public required bool Status { get; set; } = true;
     
     // Navigation property for related loans
     public ICollection<Loan> Loans { get; set; } = new List<Loan>();

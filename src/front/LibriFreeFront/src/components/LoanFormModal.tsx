@@ -10,6 +10,7 @@ import {
 import { Button } from './ui/button';
 import { Label } from './ui/label';
 import { Badge } from './ui/badge';
+import { Input } from './ui/input'; // Import Input for date field
 import {
   Select,
   SelectContent,
@@ -23,27 +24,42 @@ import { AlertCircle, Book, User, Calendar } from 'lucide-react';
 interface LoanFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (bookId: number, memberId: number) => void;
+  onSave: (bookId: number, memberId: number, dueDate: Date) => void;
   books: BookDto[];
   members: MemberDto[];
 }
 
+const formatDateForInput = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 export function LoanFormModal({ isOpen, onClose, onSave, books, members }: LoanFormModalProps) {
   const [selectedBookId, setSelectedBookId] = useState<string>('');
   const [selectedMemberId, setSelectedMemberId] = useState<string>('');
+  const [dueDate, setDueDate] = useState<Date>(() => {
+    const initialDate = new Date();
+    initialDate.setDate(initialDate.getDate() + 7);
+    return initialDate;
+  });
 
   // Reset form when modal opens
   useEffect(() => {
     if (isOpen) {
       setSelectedBookId('');
       setSelectedMemberId('');
+      const initialDate = new Date();
+      initialDate.setDate(initialDate.getDate() + 7);
+      setDueDate(initialDate);
     }
   }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedBookId && selectedMemberId) {
-      onSave(parseInt(selectedBookId), parseInt(selectedMemberId));
+      onSave(parseInt(selectedBookId), parseInt(selectedMemberId), dueDate);
     }
   };
 
@@ -51,16 +67,6 @@ export function LoanFormModal({ isOpen, onClose, onSave, books, members }: LoanF
   const availableBooks = books.filter(book => book.available > 0);
   const selectedBook = books.find(b => b.id.toString() === selectedBookId);
   const selectedMember = members.find(m => m.id.toString() === selectedMemberId);
-
-  // Calculate due date (7 days from now)
-  const dueDate = new Date();
-  dueDate.setDate(dueDate.getDate() + 7);
-  const formattedDueDate = dueDate.toLocaleDateString('es-ES', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -144,18 +150,24 @@ export function LoanFormModal({ isOpen, onClose, onSave, books, members }: LoanF
               )}
             </div>
 
-            {/* Due Date Info */}
+            {/* Due Date Input */}
             <div className="space-y-2">
-              <Label className="text-gray-700 flex items-center gap-2">
+              <Label htmlFor="dueDate" className="text-gray-700 flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
-                Fecha de Vencimiento
+                Fecha de Devolución
               </Label>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                <p className="text-blue-800 font-medium">{formattedDueDate}</p>
-                <p className="text-blue-600 text-sm mt-1">
-                  El préstamo vence automáticamente en 7 días
-                </p>
-              </div>
+              <Input
+                id="dueDate"
+                type="date"
+                value={formatDateForInput(dueDate)}
+                onChange={(e) => setDueDate(() => {
+                  const date = new Date(e.target.value)
+                  date.setUTCHours(5)
+                  return date;
+                })}
+                className="bg-gray-50 border-gray-300"
+                required
+              />
             </div>
 
             {/* Warning if no stock */}
