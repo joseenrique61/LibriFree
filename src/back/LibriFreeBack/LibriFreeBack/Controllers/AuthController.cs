@@ -46,7 +46,15 @@ public class AuthController : ControllerBase
     private string GenerateJwtToken(int userId, string username)
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
-        var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
+
+        // Read JWT key from environment variable (for Docker) or config file
+        var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? jwtSettings["Key"];
+        if (string.IsNullOrEmpty(jwtKey))
+        {
+            throw new InvalidOperationException("JWT Key not configured.");
+        }
+
+        var key = Encoding.ASCII.GetBytes(jwtKey);
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var tokenDescriptor = new SecurityTokenDescriptor

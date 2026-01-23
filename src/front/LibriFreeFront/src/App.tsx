@@ -1,24 +1,44 @@
 import { useState, useEffect } from 'react';
 import { LoginScreen } from './components/LoginScreen';
 import { DashboardLayout } from './components/DashboardLayout';
-import { BookInventory } from './components/BookInventory'; // Book interface will be imported from apiClient
+import { BookInventory } from './components/BookInventory';
 import { BookFormModal } from './components/BookFormModal';
+import { MemberInventory } from './components/MemberInventory';
+import { MemberFormModal } from './components/MemberFormModal';
+import { MemberProfile } from './components/MemberProfile';
+import { LoanInventory } from './components/LoanInventory';
+import { LoanFormModal } from './components/LoanFormModal';
 import { DeleteConfirmationModal } from './components/DeleteConfirmationModal';
 import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner';
-import { apiClient, BookDto, BookInputDto } from './utils/apiClient'; // Import apiClient and BookDto
+import { apiClient, BookDto, BookInputDto, MemberDto, MemberInputDto, LoanDto } from './utils/apiClient';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('jwt_token')); // Check for token on load
   const [activeSection, setActiveSection] = useState('libros');
   
-  // Modal states
+  // Book modal states
   const [isBookFormOpen, setIsBookFormOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedBook, setSelectedBook] = useState<BookDto | null>(null); // Use BookDto
-  const [books, setBooks] = useState<BookDto[]>([]); // Initialize as empty array
+  const [selectedBook, setSelectedBook] = useState<BookDto | null>(null);
+  const [books, setBooks] = useState<BookDto[]>([]);
   const [loadingBooks, setLoadingBooks] = useState(false);
   const [booksError, setBooksError] = useState<string | null>(null);
+
+  // Member modal states
+  const [isMemberFormOpen, setIsMemberFormOpen] = useState(false);
+  const [isMemberProfileOpen, setIsMemberProfileOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<MemberDto | null>(null);
+  const [profileMember, setProfileMember] = useState<MemberDto | null>(null);
+  const [members, setMembers] = useState<MemberDto[]>([]);
+  const [loadingMembers, setLoadingMembers] = useState(false);
+  const [membersError, setMembersError] = useState<string | null>(null);
+
+  // Loan modal states
+  const [isLoanFormOpen, setIsLoanFormOpen] = useState(false);
+  const [loans, setLoans] = useState<LoanDto[]>([]);
+  const [loadingLoans, setLoadingLoans] = useState(false);
+  const [loansError, setLoansError] = useState<string | null>(null);
 
   const fetchBooks = async () => {
     setLoadingBooks(true);
@@ -36,11 +56,45 @@ function App() {
     }
   };
 
+  const fetchMembers = async () => {
+    setLoadingMembers(true);
+    setMembersError(null);
+    try {
+      const fetchedMembers = await apiClient<MemberDto[]>('/Members');
+      setMembers(fetchedMembers);
+    } catch (error: any) {
+      setMembersError(error.message || 'Failed to fetch members.');
+      toast.error('Error al cargar miembros', {
+        description: error.message || 'Hubo un problema al obtener los miembros.',
+      });
+    } finally {
+      setLoadingMembers(false);
+    }
+  };
+
+  const fetchLoans = async () => {
+    setLoadingLoans(true);
+    setLoansError(null);
+    try {
+      const fetchedLoans = await apiClient<LoanDto[]>('/Loans');
+      setLoans(fetchedLoans);
+    } catch (error: any) {
+      setLoansError(error.message || 'Failed to fetch loans.');
+      toast.error('Error al cargar préstamos', {
+        description: error.message || 'Hubo un problema al obtener los préstamos.',
+      });
+    } finally {
+      setLoadingLoans(false);
+    }
+  };
+
   useEffect(() => {
     if (isLoggedIn) {
       fetchBooks();
+      fetchMembers();
+      fetchLoans();
     }
-  }, [isLoggedIn]); // Fetch books when login status changes
+  }, [isLoggedIn]); // Fetch data when login status changes
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -51,9 +105,11 @@ function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('jwt_token'); // Clear token on logout
+    localStorage.removeItem('jwt_token');
     setIsLoggedIn(false);
-    setBooks([]); // Clear books on logout
+    setBooks([]);
+    setMembers([]);
+    setLoans([]);
     toast.info('Sesión cerrada', {
       description: 'Has cerrado sesión correctamente',
     });
@@ -125,6 +181,101 @@ function App() {
     }
   };
 
+  // Member handlers
+  const handleAddMember = () => {
+    setSelectedMember(null);
+    setIsMemberFormOpen(true);
+  };
+
+  const handleEditMember = (member: MemberDto) => {
+    setSelectedMember(member);
+    setIsMemberFormOpen(true);
+  };
+
+  const handleViewProfile = (member: MemberDto) => {
+    setProfileMember(member);
+    setIsMemberProfileOpen(true);
+  };
+
+  const handleSaveMember = async (memberData: MemberInputDto) => {
+    try {
+      if (selectedMember) {
+        // Edit existing member
+        await apiClient(`/Members/${selectedMember.id}`, {
+          method: 'PUT',
+          body: JSON.stringify(memberData),
+        });
+        toast.success('Miembro actualizado correctamente', {
+          description: `Los cambios en "${memberData.firstName} ${memberData.lastName}" se han guardado`,
+        });
+      } else {
+        // Add new member
+        await apiClient('/Members', {
+          method: 'POST',
+          body: JSON.stringify(memberData),
+        });
+        toast.success('Miembro registrado correctamente', {
+          description: `"${memberData.firstName} ${memberData.lastName}" ha sido agregado al sistema`,
+        });
+      }
+      setIsMemberFormOpen(false);
+      setSelectedMember(null);
+      fetchMembers(); // Refresh member list after save
+    } catch (error: any) {
+      toast.error('Error al guardar miembro', {
+        description: error.message || 'Hubo un problema al guardar el miembro.',
+      });
+    }
+  };
+
+  // Loan handlers
+  const handleAddLoan = () => {
+    setIsLoanFormOpen(true);
+  };
+
+  const handleSaveLoan = async (bookId: number, memberId: number) => {
+    try {
+      const dueDate = new Date();
+      dueDate.setDate(dueDate.getDate() + 7);
+
+      await apiClient('/Loans', {
+        method: 'POST',
+        body: JSON.stringify({
+          bookId,
+          memberId,
+          dueDate: dueDate.toISOString(),
+        }),
+      });
+      toast.success('Préstamo registrado correctamente', {
+        description: 'El libro ha sido prestado exitosamente',
+      });
+      setIsLoanFormOpen(false);
+      fetchLoans();
+      fetchBooks(); // Refresh to update available count
+    } catch (error: any) {
+      toast.error('Error al registrar préstamo', {
+        description: error.message || 'Hubo un problema al registrar el préstamo.',
+      });
+    }
+  };
+
+  const handleReturnLoan = async (loan: LoanDto) => {
+    try {
+      await apiClient(`/Loans/${loan.id}/return`, {
+        method: 'PUT',
+      });
+      toast.success('Libro devuelto correctamente', {
+        description: `"${loan.bookTitle}" ha sido devuelto`,
+      });
+      fetchLoans();
+      fetchBooks(); // Refresh to update available count
+    } catch (error: any) {
+      toast.error('Error al registrar devolución', {
+        description: error.message || 'Hubo un problema al registrar la devolución.',
+      });
+    }
+  };
+
   const renderContent = () => {
     switch (activeSection) {
       case 'libros':
@@ -140,21 +291,24 @@ function App() {
         );
       case 'miembros':
         return (
-          <div className="p-8">
-            <h1 className="text-gray-900 mb-4">Gestión de Miembros</h1>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-              <p className="text-gray-500">Esta sección está en desarrollo</p>
-            </div>
-          </div>
+          <MemberInventory
+            members={members}
+            loading={loadingMembers}
+            error={membersError}
+            onAddMember={handleAddMember}
+            onEditMember={handleEditMember}
+            onViewProfile={handleViewProfile}
+          />
         );
       case 'prestamos':
         return (
-          <div className="p-8">
-            <h1 className="text-gray-900 mb-4">Gestión de Préstamos</h1>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-              <p className="text-gray-500">Esta sección está en desarrollo</p>
-            </div>
-          </div>
+          <LoanInventory
+            loans={loans}
+            loading={loadingLoans}
+            error={loansError}
+            onAddLoan={handleAddLoan}
+            onReturnLoan={handleReturnLoan}
+          />
         );
       default:
         return null;
@@ -180,6 +334,27 @@ function App() {
         onClose={() => setIsBookFormOpen(false)}
         onSave={handleSaveBook}
         book={selectedBook}
+      />
+
+      <MemberFormModal
+        isOpen={isMemberFormOpen}
+        onClose={() => setIsMemberFormOpen(false)}
+        onSave={handleSaveMember}
+        member={selectedMember}
+      />
+
+      <MemberProfile
+        isOpen={isMemberProfileOpen}
+        onClose={() => setIsMemberProfileOpen(false)}
+        member={profileMember}
+      />
+
+      <LoanFormModal
+        isOpen={isLoanFormOpen}
+        onClose={() => setIsLoanFormOpen(false)}
+        onSave={handleSaveLoan}
+        books={books}
+        members={members}
       />
 
       <DeleteConfirmationModal

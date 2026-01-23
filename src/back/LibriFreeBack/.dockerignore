@@ -1,0 +1,30 @@
+# Build outputs
+**/bin/
+**/obj/
+
+# IDEs
+**/.vs/
+**/.vscode/
+**/.idea/
+
+# Dependencies
+**/node_modules/
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# Configuration files (should be generated at runtime)
+appsettings.json
+appsettings.Development.json
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+
+# Logs
+*.log

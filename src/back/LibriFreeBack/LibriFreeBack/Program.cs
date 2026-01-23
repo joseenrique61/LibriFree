@@ -17,8 +17,15 @@ builder.Services.AddControllers();
 
 // 2. Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var key = Encoding.ASCII.GetBytes(jwtSettings["Key"] 
-                                   ?? throw new InvalidOperationException("JWT Key not found."));
+
+// Allow JWT key from environment variable (for Docker) or from config file
+var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? jwtSettings["Key"];
+if (string.IsNullOrEmpty(jwtKey))
+{
+    throw new InvalidOperationException("JWT Key not configured. Set JWT_SECRET_KEY environment variable or configure in appsettings.json");
+}
+
+var key = Encoding.ASCII.GetBytes(jwtKey);
 
 builder.Services.AddAuthentication(options =>
     {
@@ -111,7 +118,18 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<LibriFreeContext>();
-    context.Database.Migrate();
+
+    // For Docker/Development: Use EnsureCreated for simplicity
+    // For Production: Use Migrate() instead
+    if (app.Environment.IsDevelopment())
+    {
+        context.Database.EnsureCreated();
+    }
+    else
+    {
+        context.Database.Migrate();
+    }
+
     SeedData.Initialize(services);
 }
 

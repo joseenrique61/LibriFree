@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Backend API (.NET)
+  backend:
+    build:
+      context: ./src/back/LibriFreeBack
+      dockerfile: Dockerfile
+    container_name: librifree-backend
+    ports:
+      - "5051:5051"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5051
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/librifree.db
+    volumes:
+      - ./data:/app/data
+    networks:
+      - librifree-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5051/swagger/index.html"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  # Frontend (React + Nginx)
+  frontend:
+    build:
+      context: ./src/front/LibriFreeFront
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=http://localhost:5051
+    container_name: librifree-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - librifree-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+networks:
+  librifree-network:
+    driver: bridge
+
+volumes:
+  librifree-data:

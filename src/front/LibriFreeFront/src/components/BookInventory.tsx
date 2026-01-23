@@ -1,9 +1,16 @@
 import { useState } from 'react';
-import { Search, Plus, Edit2, Trash2 } from 'lucide-react';
+import { Search, Plus, Edit2, Trash2, Filter } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
-import { BookDto } from '../utils/apiClient'; // Import BookDto
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select';
+import { BookDto } from '../utils/apiClient';
 
 interface BookInventoryProps {
   books: BookDto[];
@@ -23,13 +30,22 @@ export function BookInventory({
   onDeleteBook,
 }: BookInventoryProps) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-  const filteredBooks = books.filter(
-    (book) =>
+  // Get unique categories from books
+  const categories = Array.from(new Set(books.map(book => book.category))).sort();
+
+  const filteredBooks = books.filter((book) => {
+    const matchesSearch =
       book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      book.isbn.includes(searchQuery)
-  );
+      book.isbn.includes(searchQuery);
+
+    const matchesCategory =
+      selectedCategory === 'all' || book.category === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+  });
 
   const getStockBadge = (available: number) => { // Use available
     if (available === 0) {
@@ -52,16 +68,36 @@ export function BookInventory({
       {/* Controls Bar */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
         <div className="flex gap-4 items-center justify-between">
-          {/* Search */}
-          <div className="flex-1 max-w-md relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <Input
-              type="text"
-              placeholder="Buscar por título, autor o ISBN..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-gray-50 border-gray-300"
-            />
+          <div className="flex gap-4 items-center flex-1">
+            {/* Search */}
+            <div className="flex-1 max-w-md relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="Buscar por título, autor o ISBN..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 bg-gray-50 border-gray-300"
+              />
+            </div>
+
+            {/* Category Filter */}
+            <div className="w-64">
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="bg-gray-50 border-gray-300">
+                  <Filter className="w-4 h-4 mr-2 text-gray-500" />
+                  <SelectValue placeholder="Filtrar por categoría" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas las categorías</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Add Book Button */}
@@ -92,7 +128,8 @@ export function BookInventory({
                   <th className="px-6 py-4 text-left text-gray-700">Título</th>
                   <th className="px-6 py-4 text-left text-gray-700">Autor</th>
                   <th className="px-6 py-4 text-left text-gray-700">ISBN</th>
-                  <th className="px-6 py-4 text-left text-gray-700">Stock Disponible</th> {/* Changed column header */}
+                  <th className="px-6 py-4 text-left text-gray-700">Categoría</th>
+                  <th className="px-6 py-4 text-left text-gray-700">Stock Disponible</th>
                   <th className="px-6 py-4 text-right text-gray-700">Acciones</th>
                 </tr>
               </thead>
@@ -102,7 +139,8 @@ export function BookInventory({
                     <td className="px-6 py-4 text-gray-900">{book.title}</td>
                     <td className="px-6 py-4 text-gray-600">{book.author}</td>
                     <td className="px-6 py-4 text-gray-600 font-mono text-sm">{book.isbn}</td>
-                    <td className="px-6 py-4">{getStockBadge(book.available)}</td> {/* Use book.available */}
+                    <td className="px-6 py-4 text-gray-600">{book.category}</td>
+                    <td className="px-6 py-4">{getStockBadge(book.available)}</td>
                     <td className="px-6 py-4">
                       <div className="flex gap-2 justify-end">
                         <Button

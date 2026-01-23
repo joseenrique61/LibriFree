@@ -1,0 +1,117 @@
+# ===================
+# Archivos Sensibles
+# ===================
+
+# Variables de entorno (contiene JWT_SECRET_KEY)
+.env
+.env.local
+.env.*.local
+
+# Base de datos SQLite
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# Configuración de Claude Code
+.claude/
+
+# Archivo accidental de Windows
+nul
+
+# ===================
+# .NET / C#
+# ===================
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# appsettings con secretos (usar .example)
+appsettings.json
+appsettings.Development.json
+!appsettings.json.example
+
+# ===================
+# Node.js / Frontend
+# ===================
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage/
+*.lcov
+
+# Cache
+.npm
+.eslintcache
+.cache/
+
+# Vite
+*.local
+
+# ===================
+# IDEs y Editores
+# ===================
+
+# VSCode (mantener settings compartidos)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains
+.idea/
+*.iml
+
+# ===================
+# Sistema Operativo
+# ===================
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+.directory
+extra
