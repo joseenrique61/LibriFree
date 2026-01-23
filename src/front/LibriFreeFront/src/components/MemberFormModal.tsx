@@ -102,7 +102,7 @@ export function MemberFormModal({
           email: member.email,
           status: member.status,
         });
-        setDniError(verifyEcuadorianDni(member.dni)); // Validate existing DNI
+        setDniError(''); // Skip validation for existing members (DNI is read-only)
       } else {
         setFormData({
           firstName: "",
@@ -124,10 +124,12 @@ export function MemberFormModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const currentDniError = verifyEcuadorianDni(formData.dni);
-    if (currentDniError) {
-      setDniError(currentDniError);
-      return;
+    if (!member) {
+      const currentDniError = verifyEcuadorianDni(formData.dni);
+      if (currentDniError) {
+        setDniError(currentDniError);
+        return;
+      }
     }
     onSave(formData);
   };
