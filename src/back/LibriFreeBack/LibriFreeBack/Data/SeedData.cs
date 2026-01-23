@@ -50,14 +50,14 @@ public static class SeedData
             // Seed Members
             var members = new[]
             {
-                new Member { FirstName = "María", LastName = "González", Dni = "1234567890", Email = "maria.gonzalez@email.com", Status = true },
-                new Member { FirstName = "Juan", LastName = "Pérez", Dni = "1234567891", Email = "juan.perez@email.com", Status = true },
-                new Member { FirstName = "Ana", LastName = "Martínez", Dni = "1234567892", Email = "ana.martinez@email.com", Status = true },
-                new Member { FirstName = "Carlos", LastName = "López", Dni = "1234567893", Email = "carlos.lopez@email.com", Status = true },
-                new Member { FirstName = "Laura", LastName = "Sánchez", Dni = "1234567894", Email = "laura.sanchez@email.com", Status = true },
-                new Member { FirstName = "Diego", LastName = "Rodríguez", Dni = "1234567895", Email = "diego.rodriguez@email.com", Status = true },
-                new Member { FirstName = "Sofía", LastName = "Fernández", Dni = "1234567896", Email = "sofia.fernandez@email.com", Status = true },
-                new Member { FirstName = "Miguel", LastName = "García", Dni = "1234567897", Email = "miguel.garcia@email.com", Status = true }
+                new Member { FirstName = "María", LastName = "González", Dni = "1712345675", Email = "maria.gonzalez@email.com", Status = true },
+                new Member { FirstName = "Juan", LastName = "Pérez", Dni = "0923456784", Email = "juan.perez@email.com", Status = true },
+                new Member { FirstName = "Ana", LastName = "Martínez", Dni = "1301234561", Email = "ana.martinez@email.com", Status = true },
+                new Member { FirstName = "Carlos", LastName = "López", Dni = "0112345673", Email = "carlos.lopez@email.com", Status = true },
+                new Member { FirstName = "Laura", LastName = "Sánchez", Dni = "0601234560", Email = "laura.sanchez@email.com", Status = true },
+                new Member { FirstName = "Diego", LastName = "Rodríguez", Dni = "1012345672", Email = "diego.rodriguez@email.com", Status = true },
+                new Member { FirstName = "Sofía", LastName = "Fernández", Dni = "0512345679", Email = "sofia.fernandez@email.com", Status = true },
+                new Member { FirstName = "Miguel", LastName = "García", Dni = "1812345674", Email = "miguel.garcia@email.com", Status = true }
             };
             context.Members.AddRange(members);
 
